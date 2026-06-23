@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Filament\Resources\Posts\Tables;
+
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+
+class PostsTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                SpatieMediaLibraryImageColumn::make('banner')->collection('banner')->circular(),
+                TextColumn::make('title')->searchable()->sortable(),
+                TextColumn::make('locale')->badge(),
+                TextColumn::make('status')->badge(),
+                IconColumn::make('is_featured')->boolean(),
+                TextColumn::make('published_at')->dateTime()->sortable(),
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->recordActions([EditAction::make()])
+            ->toolbarActions([
+                BulkActionGroup::make([DeleteBulkAction::make()]),
+            ]);
+    }
+}
