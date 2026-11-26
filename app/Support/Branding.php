@@ -15,7 +15,7 @@ class Branding
             return $conversion ? $media->getUrl($conversion) : $media->getUrl();
         }
 
-        return asset('images/logo-placeholder.svg');
+        return asset(config('site.logo', 'images/logo.svg'));
     }
 
     public static function logoDarkUrl(string $conversion = ''): string
@@ -27,7 +27,7 @@ class Branding
             return $conversion ? $media->getUrl($conversion) : $media->getUrl();
         }
 
-        return asset('images/logo-placeholder.svg');
+        return asset(config('site.logo', 'images/logo.svg'));
     }
 
     public static function faviconUrl(): string
@@ -41,7 +41,7 @@ class Branding
                 : $media->getUrl();
         }
 
-        return asset('images/logo-placeholder.svg');
+        return asset('images/favicon.svg');
     }
 
     public static function appleTouchIconUrl(): string
@@ -55,7 +55,7 @@ class Branding
                 : $media->getUrl();
         }
 
-        return asset('images/logo-placeholder.svg');
+        return asset('images/logo-mark.svg');
     }
 
     public static function footerLogoUrl(): string
@@ -67,7 +67,7 @@ class Branding
             return $media->getUrl('thumb');
         }
 
-        return asset('images/logo-placeholder.svg');
+        return asset(config('site.logo', 'images/logo.svg'));
     }
 
     /**
@@ -91,6 +91,6 @@ class Branding
             return $logo->getUrl();
         }
 
-        return asset(config('site.logo', 'images/logo-placeholder.svg'));
+        return asset(config('site.logo', 'images/logo.svg'));
     }
 }

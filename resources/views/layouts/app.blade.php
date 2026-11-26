@@ -13,7 +13,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="{{ $faviconUrl }}">
+    <link rel="icon" href="{{ $faviconUrl }}" type="image/svg+xml">
     <link rel="apple-touch-icon" href="{{ \App\Support\Branding::appleTouchIconUrl() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,12 +30,8 @@
 <body class="ct-body">
     <header class="ct-header" id="site-header">
         <div class="ct-container ct-header-inner">
-            <a href="{{ route('home') }}" class="ct-brand">
-                <img src="{{ $logoUrl }}" alt="{{ $siteName }}" width="160" height="48">
-                <div class="ct-brand-text">
-                    <p class="ct-brand-name">{{ $siteName }}</p>
-                    <p class="ct-brand-tagline">{{ $siteTagline }}</p>
-                </div>
+            <a href="{{ route('home') }}" class="ct-brand" aria-label="{{ $siteName }}">
+                <img class="ct-brand-logo" src="{{ $logoUrl }}" alt="{{ $siteName }}" width="200" height="48">
             </a>
 
             <nav id="site-nav" class="ct-nav">

@@ -7,7 +7,7 @@ return [
         'SITE_DESCRIPTION',
         'Curated Sri Lankan tours for European travellers — cultural heritage, wildlife safaris, tea country, and tropical beaches with expert local guides.'
     ),
-    'logo' => env('SITE_LOGO', 'images/logo-placeholder.svg'),
+    'logo' => env('SITE_LOGO', 'images/logo.svg'),
     'og_image' => env('SITE_OG_IMAGE', 'images/og-default.jpg'),
     'og_width' => (int) env('SITE_OG_WIDTH', 1200),
     'og_height' => (int) env('SITE_OG_HEIGHT', 630),

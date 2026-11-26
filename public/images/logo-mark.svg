@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none" role="img" aria-label="Ceyloania">
+  <defs>
+    <linearGradient id="ctGoldMark" x1="10" y1="10" x2="62" y2="62" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E8C15A"/>
+      <stop offset="1" stop-color="#D4A017"/>
+    </linearGradient>
+  </defs>
+  <circle cx="36" cy="36" r="33" fill="#0B3D36"/>
+  <circle cx="36" cy="36" r="30" stroke="url(#ctGoldMark)" stroke-width="2.2"/>
+  <circle cx="36" cy="36" r="24" stroke="#127A66" stroke-width="1" opacity="0.55"/>
+
+  <path d="M36 18c2.8 5.8 2.2 10.6-1.4 14.6 3.8-1 7.2-3.8 8.8-7.8-3.6 1.4-5.8 3.8-6.8 7.6 3.2-2 7.4-2.2 11.2-.6-4.4 1-7.4 3.8-8.8 8 5-1.4 9 .4 12 4-5.4-.6-9.4 1.2-12 5 4 .4 7.2 2.6 9 6.4-4.8-2.2-9-1.8-12.8.6 1.2 3.6.2 7-2.6 10" fill="none" stroke="url(#ctGoldMark)" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M36 18c-2.8 5.8-2.2 10.6 1.4 14.6-3.8-1-7.2-3.8-8.8-7.8 3.6 1.4 5.8 3.8 6.8 7.6-3.2-2-7.4-2.2-11.2-.6 4.4 1 7.4 3.8 8.8 8-5-1.4-9 .4-12 4 5.4-.6 9.4 1.2 12 5-4 .4-7.2 2.6-9 6.4 4.8-2.2 9-1.8 12.8.6-1.2 3.6-.2 7 2.6 10" fill="none" stroke="url(#ctGoldMark)" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M36 20v22" stroke="url(#ctGoldMark)" stroke-width="1.9" stroke-linecap="round"/>
+  <circle cx="36" cy="43" r="2.6" fill="#E8C15A"/>
+
+  <path d="M18 51c5.2-3.6 10-3.6 15.2 0s10 3.6 15.2 0" stroke="#E8C15A" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M20 55c4.8-2.8 9-2.8 13.8 0s9 2.8 13.8 0" stroke="#127A66" stroke-width="1.3" stroke-linecap="round" opacity="0.8"/>
+</svg>
