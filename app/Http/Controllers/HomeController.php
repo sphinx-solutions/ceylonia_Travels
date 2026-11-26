@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\AppliesSeo;
 use App\Models\Album;
 use App\Models\Page;
 use App\Models\Post;
-use App\Models\Setting;
 use App\Models\Testimonial;
 use App\Models\TourPackage;
-use App\Services\SetSeoService;
-use App\Support\Branding;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
+    use AppliesSeo;
+
     public function index(): View
     {
         $locale = app()->getLocale();
@@ -51,7 +51,7 @@ class HomeController extends Controller
             ->limit(4)
             ->get();
 
-        $this->seo()->setHomePageSeo();
+        $this->applySeo(fn ($seo) => $seo->setHomePageSeo());
 
         return view('home', compact('featuredPackages', 'latestPosts', 'testimonials', 'albums'));
     }
@@ -62,14 +62,7 @@ class HomeController extends Controller
         $page = Page::query()->where('slug', 'about')->forLocale($locale)->first()
             ?? Page::query()->where('slug', 'about')->forLocale('en')->first();
 
-        if ($page) {
-            $this->seo()->setPageSeo($page);
-        } else {
-            $this->seo()->setPageSeo(new Page([
-                'title' => __('About Us'),
-                'content' => '',
-            ]));
-        }
+        $this->applySeo(fn ($seo) => $seo->setAboutSeo($page));
 
         return view('about', compact('page'));
     }
@@ -85,16 +78,8 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->paginate(12);
 
-        $this->seo()->setTestimonialsSeo();
+        $this->applySeo(fn ($seo) => $seo->setTestimonialsSeo());
 
         return view('testimonials', compact('testimonials'));
-    }
-
-    protected function seo(): SetSeoService
-    {
-        return new SetSeoService(
-            Setting::query()->whereIn('locale', [app()->getLocale(), 'en'])->get(),
-            Branding::logoUrl('og'),
-        );
     }
 }

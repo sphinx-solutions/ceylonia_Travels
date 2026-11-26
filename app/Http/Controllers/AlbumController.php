@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\AppliesSeo;
 use App\Models\Album;
-use App\Models\Setting;
-use App\Services\SetSeoService;
-use App\Support\Branding;
 use Illuminate\View\View;
 
 class AlbumController extends Controller
 {
+    use AppliesSeo;
+
     public function index(): View
     {
         $locale = app()->getLocale();
@@ -21,7 +21,7 @@ class AlbumController extends Controller
             ->orderBy('sort_order')
             ->paginate(12);
 
-        $this->seo()->setAlbumsIndexSeo();
+        $this->applySeo(fn ($seo) => $seo->setAlbumsIndexSeo());
 
         return view('albums.index', compact('albums'));
     }
@@ -32,16 +32,12 @@ class AlbumController extends Controller
 
         $album->load('media');
 
-        $this->seo()->setAlbumSeo($album);
+        $this->applySeo(fn ($seo) => $seo->setAlbumSeo($album));
 
-        return view('albums.show', compact('album'));
-    }
-
-    protected function seo(): SetSeoService
-    {
-        return new SetSeoService(
-            Setting::query()->whereIn('locale', [app()->getLocale(), 'en'])->get(),
-            Branding::logoUrl('og'),
-        );
+        return view('albums.show', [
+            'album' => $album,
+            'canonical' => route('albums.show', $album->slug),
+            'shareTitle' => $album->name,
+        ]);
     }
 }

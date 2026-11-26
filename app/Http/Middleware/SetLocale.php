@@ -15,7 +15,8 @@ class SetLocale
         $default = config('app.locale', config('locales.default', 'en'));
         $sessionKey = config('locales.session_key', 'app_locale');
 
-        $locale = $request->session()->get($sessionKey);
+        $locale = $request->query('hl')
+            ?? $request->session()->get($sessionKey);
 
         if ($request->routeIs('blogs.show')) {
             $post = $request->route('post');
@@ -28,6 +29,10 @@ class SetLocale
 
         if (! is_string($locale) || ! in_array($locale, $available, true)) {
             $locale = $default;
+        }
+
+        if ($request->query('hl') && in_array($request->query('hl'), $available, true)) {
+            $request->session()->put($sessionKey, $locale);
         }
 
         app()->setLocale($locale);

@@ -69,4 +69,28 @@ class Branding
 
         return asset('images/logo-placeholder.svg');
     }
+
+    /**
+     * Prefer a dedicated OG asset, then logo og conversion, then logo, then config fallback.
+     */
+    public static function ogImageUrl(): string
+    {
+        $configured = config('site.og_image');
+        if ($configured && is_string($configured) && file_exists(public_path($configured))) {
+            return asset($configured);
+        }
+
+        $branding = SiteBranding::instance();
+        $logo = $branding->getFirstMedia('logo');
+
+        if ($logo) {
+            if ($logo->hasGeneratedConversion('og')) {
+                return $logo->getUrl('og');
+            }
+
+            return $logo->getUrl();
+        }
+
+        return asset(config('site.logo', 'images/logo-placeholder.svg'));
+    }
 }

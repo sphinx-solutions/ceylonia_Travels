@@ -19,6 +19,7 @@
                 <p><strong>{{ $package->excerpt }}</strong></p>
             @endif
             {!! $package->content !!}
+            @include('partials.share-buttons', ['canonical' => $canonical ?? route('packages.show', $package->slug), 'shareTitle' => $package->title])
             <p style="margin-top: 2rem;">
                 <a href="{{ route('contact') }}" class="ct-btn ct-btn-primary">{{ __('Enquire About This Package') }}</a>
             </p>

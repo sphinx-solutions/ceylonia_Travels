@@ -10,6 +10,7 @@
             <div class="ct-container ct-prose">
                 <h1>{{ $post->title }}</h1>
                 <p class="ct-card-meta">{{ $post->author }} · {{ $post->published_at?->format('F j, Y') }}</p>
+                @include('partials.share-buttons', ['canonical' => $canonical ?? route('blogs.show', $post->slug), 'shareTitle' => $post->title])
                 {!! $post->content !!}
             </div>
         </section>

@@ -12,6 +12,7 @@
             @if ($album->description)
                 <div class="ct-prose" style="margin-bottom: 2rem;">{!! $album->description !!}</div>
             @endif
+            @include('partials.share-buttons', ['canonical' => $canonical ?? route('albums.show', $album->slug), 'shareTitle' => $album->name])
 
             @php $files = $album->getMedia('files'); @endphp
             @if ($files->isEmpty())

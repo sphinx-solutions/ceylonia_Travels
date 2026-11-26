@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
+use App\Http\Controllers\Concerns\AppliesSeo;
 use App\Models\TourPackage;
-use App\Services\SetSeoService;
-use App\Support\Branding;
 use Illuminate\View\View;
 
 class PackageController extends Controller
 {
+    use AppliesSeo;
+
     public function index(): View
     {
         $locale = app()->getLocale();
@@ -21,7 +21,7 @@ class PackageController extends Controller
             ->orderBy('sort_order')
             ->paginate(12);
 
-        $this->seo()->setPackagesIndexSeo();
+        $this->applySeo(fn ($seo) => $seo->setPackagesIndexSeo());
 
         return view('packages.index', compact('packages'));
     }
@@ -41,16 +41,13 @@ class PackageController extends Controller
             ->limit(3)
             ->get();
 
-        $this->seo()->setPackageSeo($package);
+        $this->applySeo(fn ($seo) => $seo->setPackageSeo($package));
 
-        return view('packages.show', compact('package', 'related'));
-    }
-
-    protected function seo(): SetSeoService
-    {
-        return new SetSeoService(
-            Setting::query()->whereIn('locale', [app()->getLocale(), 'en'])->get(),
-            Branding::logoUrl('og'),
-        );
+        return view('packages.show', [
+            'package' => $package,
+            'related' => $related,
+            'canonical' => route('packages.show', $package->slug),
+            'shareTitle' => $package->title,
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Posts\Schemas;
 
 use AmidEsfahani\FilamentTinyEditor\TinyEditor;
 use App\Support\LocaleOptions;
+use App\Support\Slug;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -32,25 +33,34 @@ class PostForm
                             ->live(onBlur: true)
                             ->afterStateUpdated(function ($set, ?string $state) {
                                 if ($state) {
-                                    $set('slug', Str::slug($state));
+                                    $set('slug', Slug::make($state));
                                     $set('meta_title', $state);
                                 }
                             }),
                         TextInput::make('slug')
                             ->required()
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(ignoreRecord: true)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn ($set, ?string $state) => $set('slug', Slug::make($state))),
                         TextInput::make('author')
+                            ->label('Author / specialist name')
                             ->default(fn () => auth()->user()?->name)
-                            ->maxLength(255),
+                            ->required()
+                            ->maxLength(255)
+                            ->helperText('Use a real byline — never “Admin”.'),
                         TinyEditor::make('content')
                             ->required()
                             ->columnSpanFull()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($set, ?string $state) => $set('meta_description', Str::limit(strip_tags($state ?? ''), 150))),
+                            ->afterStateUpdated(fn ($set, ?string $state) => $set(
+                                'meta_description',
+                                Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($state ?? '')) ?? ''), 150, '')
+                            )),
                         SpatieMediaLibraryFileUpload::make('banner')
                             ->collection('banner')
                             ->image()
+                            ->helperText('Social preview uses a 1200×630 JPG conversion (~70% quality).')
                             ->required(),
                         SpatieMediaLibraryFileUpload::make('media')
                             ->collection('media')
@@ -67,8 +77,28 @@ class PostForm
                             ->required(),
                         DateTimePicker::make('published_at'),
                         Toggle::make('is_featured')->default(false),
-                        TextInput::make('meta_title')->maxLength(255),
-                        Textarea::make('meta_description')->rows(3)->maxLength(500),
+                        TextInput::make('meta_title')
+                            ->required()
+                            ->maxLength(255)
+                            ->helperText('Auto-filled from the title; edit freely.'),
+                        Textarea::make('meta_description')
+                            ->required()
+                            ->rows(3)
+                            ->maxLength(160)
+                            ->helperText('~150–160 characters. Auto-filled from content.'),
+                        Textarea::make('schema_data')
+                            ->rows(6)
+                            ->helperText('Optional raw JSON-LD override. If filled, generated schema is skipped.')
+                            ->columnSpanFull()
+                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : $state)
+                            ->dehydrateStateUsing(function ($state) {
+                                if (! filled($state)) {
+                                    return null;
+                                }
+                                $decoded = json_decode($state, true);
+
+                                return json_last_error() === JSON_ERROR_NONE ? $decoded : null;
+                            }),
                     ])->columns(2),
             ]);
     }

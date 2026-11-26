@@ -1,11 +1,18 @@
+@php
+    $currentLocale = app()->getLocale();
+    $availableLocales = $availableLocales ?? config('locales.available', []);
+    $siteName = $siteName ?? config('site.name');
+    $siteTagline = $siteTagline ?? config('site.tagline');
+    $logoUrl = $logoUrl ?? \App\Support\Branding::logoUrl();
+    $faviconUrl = $faviconUrl ?? \App\Support\Branding::faviconUrl();
+    $hreflangUrl = request()->url(); // clean path, no query / UTM
+@endphp
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" dir="{{ $availableLocales[app()->getLocale()]['dir'] ?? 'ltr' }}">
+<html lang="{{ $currentLocale }}" dir="{{ $availableLocales[$currentLocale]['dir'] ?? 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', $siteName)</title>
-    <meta name="description" content="@yield('meta_description', config('site.description'))">
     <link rel="icon" type="image/png" href="{{ $faviconUrl }}">
     <link rel="apple-touch-icon" href="{{ \App\Support\Branding::appleTouchIconUrl() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +20,10 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/ceyloania.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @foreach ($availableLocales as $code => $info)
+        <link rel="alternate" hreflang="{{ $code }}" href="{{ $hreflangUrl }}?hl={{ $code }}">
+    @endforeach
+    <link rel="alternate" hreflang="x-default" href="{{ $hreflangUrl }}?hl={{ config('locales.default', 'en') }}">
     {!! SEO::generate() !!}
     @stack('head')
 </head>
@@ -20,7 +31,7 @@
     <header class="ct-header">
         <div class="ct-container ct-header-inner">
             <a href="{{ route('home') }}" class="ct-brand">
-                <img src="{{ $logoUrl }}" alt="{{ $siteName }} logo" width="160" height="48">
+                <img src="{{ $logoUrl }}" alt="{{ $siteName }}" width="160" height="48">
                 <div class="ct-brand-text">
                     <p class="ct-brand-name">{{ $siteName }}</p>
                     <p class="ct-brand-tagline">{{ $siteTagline }}</p>
@@ -30,7 +41,7 @@
             <div class="ct-lang-switch" role="group" aria-label="{{ __('Language') }}">
                 @foreach ($availableLocales as $code => $info)
                     <a href="{{ route('language.switch', $code) }}"
-                       class="ct-lang-btn {{ app()->getLocale() === $code ? 'active' : '' }}"
+                       class="ct-lang-btn {{ $currentLocale === $code ? 'active' : '' }}"
                        lang="{{ $code }}"
                        title="{{ $info['label'] ?? $code }}">
                         {{ $info['short'] ?? strtoupper($code) }}
@@ -64,6 +75,7 @@
                 <div>
                     <img src="{{ \App\Support\Branding::footerLogoUrl() }}" alt="{{ $siteName }}" height="40" style="margin-bottom: 1rem;">
                     <p>{{ config('site.description') }}</p>
+                    @include('partials.social-links')
                 </div>
                 <div>
                     <h4>{{ __('Explore') }}</h4>

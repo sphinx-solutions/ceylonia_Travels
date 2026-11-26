@@ -22,6 +22,9 @@ class Album extends Model implements HasMedia
         'name',
         'slug',
         'description',
+        'meta_title',
+        'meta_description',
+        'schema_data',
         'locale',
         'is_published',
         'sort_order',
@@ -31,6 +34,7 @@ class Album extends Model implements HasMedia
     {
         return [
             'is_published' => 'boolean',
+            'schema_data' => 'array',
         ];
     }
 

@@ -7,13 +7,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\SitemapController;
-use App\Http\Middleware\SetLocale;
-use App\Http\Middleware\ShareSiteData;
 use Illuminate\Support\Facades\Route;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 
-Route::middleware([SetLocale::class, ShareSiteData::class, CacheResponse::class])
+Route::middleware([CacheResponse::class])
     ->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/about', [HomeController::class, 'about'])->name('about');

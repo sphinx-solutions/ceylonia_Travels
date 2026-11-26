@@ -32,6 +32,7 @@ class TourPackage extends Model implements HasMedia
         'sort_order',
         'meta_title',
         'meta_description',
+        'schema_data',
     ];
 
     protected function casts(): array
@@ -40,6 +41,7 @@ class TourPackage extends Model implements HasMedia
             'price_from' => 'decimal:2',
             'is_featured' => 'boolean',
             'is_published' => 'boolean',
+            'schema_data' => 'array',
         ];
     }
 

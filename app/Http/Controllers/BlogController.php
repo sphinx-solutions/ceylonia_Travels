@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\AppliesSeo;
 use App\Models\Post;
-use App\Models\Setting;
-use App\Services\SetSeoService;
-use App\Support\Branding;
 use Illuminate\View\View;
 
 class BlogController extends Controller
 {
+    use AppliesSeo;
+
     public function index(): View
     {
         $locale = app()->getLocale();
@@ -21,12 +21,7 @@ class BlogController extends Controller
             ->latest('published_at')
             ->paginate(12);
 
-        $seo = new SetSeoService(
-            Setting::query()->whereIn('locale', [$locale, 'en'])->get(),
-            Branding::logoUrl('og'),
-        );
-
-        $seo->setBlogsIndexSeo();
+        $this->applySeo(fn ($seo) => $seo->setBlogsIndexSeo());
 
         return view('blogs.index', compact('posts'));
     }
@@ -46,12 +41,13 @@ class BlogController extends Controller
             ->limit(3)
             ->get();
 
-        $seo = new SetSeoService(
-            Setting::query()->whereIn('locale', [app()->getLocale(), 'en'])->get(),
-            Branding::logoUrl('og'),
-        );
-        $seo->setPostSeo($post);
+        $this->applySeo(fn ($seo) => $seo->setPostSeo($post));
 
-        return view('blogs.show', compact('post', 'related'));
+        return view('blogs.show', [
+            'post' => $post,
+            'related' => $related,
+            'canonical' => route('blogs.show', $post->slug),
+            'shareTitle' => $post->title,
+        ]);
     }
 }
