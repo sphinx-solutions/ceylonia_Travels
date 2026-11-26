@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="ct-page-header">
+    <div class="ct-page-header ct-page-header-albums">
         <div class="ct-container">
+            <p class="ct-eyebrow">{{ __('Gallery') }}</p>
             <h1>{{ $album->name }}</h1>
         </div>
     </div>
@@ -16,7 +17,7 @@
 
             @php $files = $album->getMedia('files'); @endphp
             @if ($files->isEmpty())
-                <p style="text-align: center; color: var(--text-muted);">{{ __('No photos in this album yet.') }}</p>
+                <p class="ct-center" style="color: var(--text-muted);">{{ __('No photos in this album yet.') }}</p>
             @else
                 <div class="ct-gallery">
                     @foreach ($files as $media)

@@ -11,7 +11,7 @@
 @endphp
 
 @if ($social !== [])
-    <p class="ct-social" style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+    <p class="ct-social">
         @foreach ($social as $network => $href)
             <a href="{{ $href }}" target="_blank" rel="noopener noreferrer">{{ ucfirst($network) }}</a>
         @endforeach

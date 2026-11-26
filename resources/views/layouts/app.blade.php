@@ -17,7 +17,7 @@
     <link rel="apple-touch-icon" href="{{ \App\Support\Branding::appleTouchIconUrl() }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/ceyloania.css') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @foreach ($availableLocales as $code => $info)
@@ -28,7 +28,7 @@
     @stack('head')
 </head>
 <body class="ct-body">
-    <header class="ct-header">
+    <header class="ct-header" id="site-header">
         <div class="ct-container ct-header-inner">
             <a href="{{ route('home') }}" class="ct-brand">
                 <img src="{{ $logoUrl }}" alt="{{ $siteName }}" width="160" height="48">
@@ -37,21 +37,6 @@
                     <p class="ct-brand-tagline">{{ $siteTagline }}</p>
                 </div>
             </a>
-
-            <div class="ct-lang-switch" role="group" aria-label="{{ __('Language') }}">
-                @foreach ($availableLocales as $code => $info)
-                    <a href="{{ route('language.switch', $code) }}"
-                       class="ct-lang-btn {{ $currentLocale === $code ? 'active' : '' }}"
-                       lang="{{ $code }}"
-                       title="{{ $info['label'] ?? $code }}">
-                        {{ $info['short'] ?? strtoupper($code) }}
-                    </a>
-                @endforeach
-            </div>
-
-            <button type="button" class="ct-nav-toggle" aria-expanded="false" aria-controls="site-nav" onclick="toggleNav(this)">
-                {{ __('Menu') }}
-            </button>
 
             <nav id="site-nav" class="ct-nav">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">{{ __('Home') }}</a>
@@ -62,6 +47,23 @@
                 <a href="{{ route('packages.index') }}" class="{{ request()->routeIs('packages.*') ? 'active' : '' }}">{{ __('Top Packages') }}</a>
                 <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'active' : '' }}">{{ __('Contact Us') }}</a>
             </nav>
+
+            <div class="ct-header-actions">
+                <div class="ct-lang-switch" role="group" aria-label="{{ __('Language') }}">
+                    @foreach ($availableLocales as $code => $info)
+                        <a href="{{ route('language.switch', $code) }}"
+                           class="ct-lang-btn {{ $currentLocale === $code ? 'active' : '' }}"
+                           lang="{{ $code }}"
+                           title="{{ $info['label'] ?? $code }}">
+                            {{ $info['short'] ?? strtoupper($code) }}
+                        </a>
+                    @endforeach
+                </div>
+
+                <button type="button" class="ct-nav-toggle" aria-expanded="false" aria-controls="site-nav" onclick="toggleNav(this)">
+                    {{ __('Menu') }}
+                </button>
+            </div>
         </div>
     </header>
 
@@ -73,7 +75,7 @@
         <div class="ct-container">
             <div class="ct-footer-grid">
                 <div>
-                    <img src="{{ \App\Support\Branding::footerLogoUrl() }}" alt="{{ $siteName }}" height="40" style="margin-bottom: 1rem;">
+                    <img src="{{ \App\Support\Branding::footerLogoUrl() }}" alt="{{ $siteName }}" height="44" style="margin-bottom: 1.1rem;">
                     <p>{{ config('site.description') }}</p>
                     @include('partials.social-links')
                 </div>
@@ -99,9 +101,37 @@
     <script>
         function toggleNav(btn) {
             const nav = document.getElementById('site-nav');
+            const header = document.getElementById('site-header');
             const open = nav.classList.toggle('open');
             btn.setAttribute('aria-expanded', open);
+            header.classList.toggle('is-open', open);
         }
+
+        (function () {
+            const header = document.getElementById('site-header');
+            const onScroll = () => {
+                header.classList.toggle('is-solid', window.scrollY > 24);
+            };
+            onScroll();
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            const reveals = document.querySelectorAll('.ct-reveal');
+            if (!('IntersectionObserver' in window) || reveals.length === 0) {
+                reveals.forEach((el) => el.classList.add('is-visible'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+            reveals.forEach((el) => observer.observe(el));
+        })();
     </script>
     @stack('scripts')
 </body>

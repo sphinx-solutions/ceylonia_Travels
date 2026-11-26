@@ -6,12 +6,12 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
-    --font-display: 'Playfair Display', Georgia, serif;
-    --color-brand: #0d4f4f;
-    --color-brand-light: #1a6b6b;
-    --color-gold: #c9a227;
-    --color-gold-light: #e8c547;
-    --color-cream: #faf8f5;
-    --color-sand: #f0ebe3;
+    --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --color-brand: #0b3d36;
+    --color-brand-light: #127a66;
+    --color-gold: #d4a017;
+    --color-gold-light: #e8c15a;
+    --color-cream: #f3f6f4;
+    --color-sand: #e6ece9;
 }

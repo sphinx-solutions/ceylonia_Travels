@@ -2,7 +2,15 @@
 
 @section('content')
     @if ($package->getFirstMedia('cover'))
-        <img src="{{ $package->getFirstMedia('cover')->getUrl('og') }}" alt="{{ $package->title }}" style="width:100%;max-height:420px;object-fit:cover;">
+        <div class="ct-detail-banner">
+            <img src="{{ $package->getFirstMedia('cover')->getUrl('og') }}" alt="{{ $package->title }}">
+        </div>
+    @else
+        <div class="ct-page-header ct-page-header-packages">
+            <div class="ct-container">
+                <h1>{{ $package->title }}</h1>
+            </div>
+        </div>
     @endif
 
     <section class="ct-section">
@@ -33,11 +41,16 @@
                 <div class="ct-grid ct-grid-3">
                     @foreach ($related as $item)
                         <article class="ct-card">
-                            @if ($item->getFirstMedia('cover'))
-                                <img class="ct-card-img" src="{{ $item->getFirstMedia('cover')->getUrl('thumb') }}" alt="{{ $item->title }}" loading="lazy">
-                            @endif
+                            <div class="ct-card-media">
+                                @if ($item->getFirstMedia('cover'))
+                                    <img class="ct-card-img" src="{{ $item->getFirstMedia('cover')->getUrl('thumb') }}" alt="{{ $item->title }}" loading="lazy">
+                                @else
+                                    <img class="ct-card-img" src="{{ asset('images/hero-packages.jpg') }}" alt="{{ $item->title }}" loading="lazy">
+                                @endif
+                            </div>
                             <div class="ct-card-body">
                                 <h3 class="ct-card-title"><a href="{{ route('packages.show', $item->slug) }}">{{ $item->title }}</a></h3>
+                                <a class="ct-link-more" href="{{ route('packages.show', $item->slug) }}">{{ __('Details') }}</a>
                             </div>
                         </article>
                     @endforeach

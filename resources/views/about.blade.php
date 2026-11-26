@@ -1,9 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="ct-page-header">
+    <div class="ct-page-header ct-page-header-about">
         <div class="ct-container">
+            <p class="ct-eyebrow">{{ __('Our story') }}</p>
             <h1>{{ $page?->title ?? __('About Us') }}</h1>
+            <p>{{ __('Local expertise with European service standards across Sri Lanka.') }}</p>
         </div>
     </div>
 

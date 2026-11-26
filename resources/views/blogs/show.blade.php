@@ -3,7 +3,15 @@
 @section('content')
     <article>
         @if ($post->getFirstMedia('banner'))
-            <img src="{{ $post->getFirstMedia('banner')->getUrl('og') }}" alt="{{ $post->title }}" style="width:100%;max-height:420px;object-fit:cover;">
+            <div class="ct-detail-banner">
+                <img src="{{ $post->getFirstMedia('banner')->getUrl('og') }}" alt="{{ $post->title }}">
+            </div>
+        @else
+            <div class="ct-page-header ct-page-header-blogs">
+                <div class="ct-container">
+                    <h1>{{ $post->title }}</h1>
+                </div>
+            </div>
         @endif
 
         <section class="ct-section">
@@ -22,11 +30,16 @@
                     <div class="ct-grid ct-grid-3">
                         @foreach ($related as $item)
                             <article class="ct-card">
-                                @if ($item->getFirstMedia('banner'))
-                                    <img class="ct-card-img" src="{{ $item->getFirstMedia('banner')->getUrl('thumb') }}" alt="{{ $item->title }}" loading="lazy">
-                                @endif
+                                <div class="ct-card-media">
+                                    @if ($item->getFirstMedia('banner'))
+                                        <img class="ct-card-img" src="{{ $item->getFirstMedia('banner')->getUrl('thumb') }}" alt="{{ $item->title }}" loading="lazy">
+                                    @else
+                                        <img class="ct-card-img" src="{{ asset('images/hero-tea.jpg') }}" alt="{{ $item->title }}" loading="lazy">
+                                    @endif
+                                </div>
                                 <div class="ct-card-body">
                                     <h3 class="ct-card-title"><a href="{{ route('blogs.show', $item->slug) }}">{{ $item->title }}</a></h3>
+                                    <a class="ct-link-more" href="{{ route('blogs.show', $item->slug) }}">{{ __('Read more') }}</a>
                                 </div>
                             </article>
                         @endforeach
